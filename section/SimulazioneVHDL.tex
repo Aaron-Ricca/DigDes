@@ -1,0 +1,49 @@
+\section{Simulazione e rappresentazione temporale in VHDL}
+
+% ==================================== MODELLING TEMPORAL BEHAVIOUR ====================================
+    \subsection{Modelling Temporal Behaviour}
+        \begin{itemize}[leftmargin=1.5em]
+            \item \textbf{Event Queue:} Il simulatore utilizza una coda di eventi per elaborare gli eventi in ordine, in modo da non avere conflitti di temporizzazione.
+            \item \textbf{Delta-Time Model:}
+            Un ciclo delta compone in tre fasi:
+            \begin{enumerate}
+                \item Richiesta di aggiornamento: attesa fino a quando il processo o l'assegnazione del segnale venga attivata da un evento.
+                \item Esecuzione del processo: tutti i processi attivi vengono eseguiti fino alla fine o fine alla prossima istruzione attesa.
+                \item Assegnazione dei segnali: dopo l'esecuzione dei processi attivi, vengono eseguite le assegnazioni dei segnali corrispondenti.
+            \end{enumerate}
+            L'assegnazione del segnale può a sua volta attivare nuovi Processi, che vengono eseguiti nel ciclo delta successivo.
+            Una volta completate queste tre fasi, la simulazione passa al ciclo delta successivo.\\
+            \textbf{Transport Delay:}
+            \begin{itemize}
+                \item Vero e proprio ritardo fisico.
+                \item \textbf{Tutti gli impulsi si propagano}.
+                \item Syntax: \verb|B <= transport A after tp;|
+                
+            \end{itemize}
+            \textbf{Inertial Delay (default):}
+            \begin{itemize}
+                \item Impulsi brevi vengono filtrati (ignorati).
+                \item Syntax: \verb|B <= A after tp;|
+            \end{itemize}
+        \end{itemize}
+
+\subsection{Infrastruttura di simulazione e Test (Test-Bench)}
+L'architettura posta sotto test si chiama DUT (Device Under Test) e viene istanziata all'interno del test-bench.
+Il Test-Bench stimola le entrate del DUT e verifica le uscite, idealmente dovrebbero essere stimolate tutte le possibilità delle entrate.
+In linea di principio il Test-Bench non deve essere sintetizzabile, in quanto il suo scopo è quello di verificare il corretto funzionamento del DUT.
+Blocchi del Test-Bench:
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Stimulus Generation:} Genera segnali di ingresso per
+    \item \textbf{DUT Instantiation:} Istanzia il DUT da testare.
+    \item \textbf{Response Monitor:} Verifica le uscite del DUT confrontandole con i risultati attesi.
+\end{itemize}
+
+\subsubsection{Controllo automatico della risposta del DUT }
+    Anweisung ASSERT:
+\begin{itemize}[leftmargin=1.5em]
+    \item Utilizzata per verificare le condizioni attese.
+    \item Sintassi: \verb|assert condition report "message";|
+    \item Se la condizione non è soddisfatta, viene generato un errore con il messaggio specificato.
+    \item Esempio: 
+    
+\end{itemize}

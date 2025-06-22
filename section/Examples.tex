@@ -1,4 +1,6 @@
 \section{Examples}
+
+
 % ==================== FILP FLOP ========================
     \subsection{Flip flop}
     \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
@@ -28,3 +30,70 @@ begin
     end process; -- Fällen wird gespeichert.
 end behavioral;
     \end{lstlisting}
+
+
+% ==================== TEST BENCH ========================
+    \subsection{Test bench (dt)}
+        \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
+-- Library declarations
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+
+-- entity declarations
+entity exor_tb is
+end exor_tb;
+
+-- architecture declarations
+architecture tb of exor_tb is
+    -- constant declarations
+    constant sim_cyc : time := 10 ns;
+    -- signal declarations
+    signal tb_a, tb_b : std_ulogic;
+    signal tb_y: std_ulogic;
+    -- Component declarations
+    component xor2
+        port(
+        xor2_a, xor2_b : in std_ulogic;
+        xor2_y
+        : out std_ulogic);
+    end component;
+    -- configuration
+    for all : xor2 use entity work.xor2(behavioral);
+
+    begin
+        -- instance assignments
+        dut : xor2
+            port map(
+            xor2_a => tb_a,
+            xor2_b => tb_b,
+            xor2_y => tb_y
+            );
+
+        -- Signal assignments for stimuli
+        Stimuli : process
+            variable tb_in_vec: std_ulogic_vector(2 - 1 downto 0);
+        begin
+            for i in 0 to (2 ** 2) - 1 loop
+            tb_in_vec := std_ulogic_vector(to_unsigned(i, 2));
+            tb_a <= tb_in_vec(1);
+            tb_b <= tb_in_vec(0);
+            wait for sim_cyc;
+            end loop;
+            wait;
+        end process;
+
+        -- Evaluation of responses
+        Response : process
+        begin
+            wait for (sim_cyc - 1 ns);
+            assert (tb_y = '0') report "error at vector 00" severity error;
+            wait for sim_cyc;
+            assert (tb_y = '1') report "error at vector 01" severity error;
+            wait for sim_cyc;
+            assert (tb_y = '1') report "error at vector 10" severity error;
+            wait for sim_cyc;
+            assert (tb_y = '0') report "error at vector 11" severity error;
+        end process;
+end tb;
+            \end{lstlisting}

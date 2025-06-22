@@ -87,7 +87,7 @@
 
 G: process(present_state, inputs)
 begin
-    next_state <= de fault_state;
+    next_state <= default_state;
         case present_state is
             when X_state =>
                 next_state <= Y_state;
@@ -123,11 +123,12 @@ end process;
 
 % ==================================== CODIFICA DEGLI STATI ====================================
     \subsection{Codifica degli stati (Z-Register)}
-    La dimenzione del registro $ = 2^{n->bit}$
+    La dimensione del registro $ = 2^{n->bit}$ bit=Flip-Flop necessari
     Gli stati di una FSM possono essere codificati in diversi modi, tra cui:
     \begin{itemize}
         \item \textbf{Codifica binaria}: ogni stato è rappresentato da un codice binario unico.
         \item \textbf{Codifica Gray}: simile alla codifica binaria, ma le transizioni tra stati adiacenti cambiano solo un bit alla volta.
+    La dimensione del registro $ = n \text{ bit}$
         \item \textbf{Codifica one-hot}: ogni stato è rappresentato da un bit attivo, con tutti gli altri bit a zero.
-        \item \textbf{Codifica one-cold}: simile alla codifica one-hot, ma solo un bit è a zero e tutti gli altri sono attivi.
+        \item \textbf{Codifica one-cold}: L'inverso di one-hot.
     \end{itemize}

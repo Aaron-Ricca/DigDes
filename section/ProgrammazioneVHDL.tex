@@ -9,6 +9,7 @@
 library ieee; 
 use ieee.std_logic_1164.all; -- CPP: using namespace std;
 use ieee.numeric_std.all; -- Solo per operazioni aritmetiche per vettori
+use ieee.math_real.all; -- Solo per operazioni aritmetiche per scalari
         \end{lstlisting}
 
 
@@ -21,7 +22,7 @@ entity <entity name> is
     port (
         {<port_name> : <mode> <type>;} -- <mode> = in | out | inout
     );
-end entity <entity name>;
+end <entity name>;
         \end{lstlisting}
 
 % =========================================== ARCHITECTURE ======================================
