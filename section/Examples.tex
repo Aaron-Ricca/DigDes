@@ -32,11 +32,24 @@ end behavioral;
     \end{lstlisting}
 
 
+% ==================== LATCH ========================
+    \subsection{Latch}
+        \begin{lstlisting}[language=VHDL]
+process_3 : process(s,a,b)
+    begin if s = '0' then
+        oup <= a;
+    elsif s = '1' then
+        oup <= b;
+    end if;
+end process;
+        \end{lstlisting}
+
+        
 % ==================== TEST BENCH ========================
     \subsection{Test bench (dt)}
         \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
 -- Library declarations
-library ieee;
+library ieee
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 

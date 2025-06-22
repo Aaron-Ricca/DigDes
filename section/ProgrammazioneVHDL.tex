@@ -1,4 +1,7 @@
 \section{Programmazione VHDL}
+% =========================================== INTRODUZIONE =========================================
+    \subsection{Introduzione}
+        In VHDL sono vietati gli if e le variabili al di fuori dei processi. É anche vietato l'uso di "Feedback" in quanto creano cose brutte.
 % =========================================== LIBRARY =========================================
     \subsection{Library}
         Una libreria puo contenere componenti e o pachetti. I componenti sono descrizione di circuiti e realizzazione specifiche,
@@ -155,42 +158,58 @@ assert (Y = expected_value) report "Test failed" severity error;
 
 % ---------------------------------------- <TYPES> ------------------------------------
         \subsubsection{\texttt{<type> (dichiarazione: segnali, variabili, ...)}}
+        \begin{minipage}[t]{0.49\columnwidth}
         Come vanno dichiarati tutti i segnali utilizzati internamente all'archittetura.\\Nella sintesi del codice, é vietato inizzializzare i segnali nella dichiarazione!
+        \texttt{bit}, \texttt{bit\_vector}, \texttt{std\_logic}, \texttt{std\_logic\_vector}, \texttt{std\_ulogic}, \texttt{std\_ulogic\_vector}, \texttt{integer}, \texttt{boolean}\\
+        \end{minipage}\begin{minipage}[t]{0.49\columnwidth}
+        \vspace{0pt}  %<-- ensures top alignment
+            \includegraphics[width=\linewidth]{Images/ConversionTypeTable.png}
+        \end{minipage}
         \begin{itemize}
         \setlength\itemsep{0pt}
-            \item \texttt{bit}: rappresenta un singolo bit, con valori \texttt{'0'} e \texttt{'1'}.
-            \begin{lstlisting}[language=VHDL]
-signal A : bit;
-            \end{lstlisting}
-            \item \texttt{bit\_vector}: rappresenta un vettore di bit, con valori \texttt{'0'} e \texttt{'1'}.
-            \begin{lstlisting}[language=VHDL]
-signal B : bit_vector(7 downto 0); -- vettore di 8 bit
-            \end{lstlisting}
             \item \texttt{std\_logic}: rappresenta un singolo bit con valori \texttt{'0'}, \texttt{'1'}.
             \begin{lstlisting}[language=VHDL]
 signal C : std_logic;
             \end{lstlisting}
-            \item \texttt{std\_logic\_vector}: rappresenta un vettore di std\_logic, con valori \texttt{'0'}, \texttt{'1'}.
-            \begin{lstlisting}[language=VHDL]
-signal D : std_logic_vector(7 downto 0);
-            \end{lstlisting}
             \item \texttt{std\_ulogic}: rappresenta un singolo bit con valori \texttt{'0'}, \texttt{'1'}, \texttt{'Z'} (alta impedenza) e \texttt{'X'} (indeterminato).
-            \begin{lstlisting}[language=VHDL]
-signal E : std_ulogic;
-            \end{lstlisting}
-            \item \texttt{std\_ulogic\_vector}: rappresenta un vettore di std\_ulogic, con valori \texttt{'0'}, \texttt{'1'}, \texttt{'Z'} e \texttt{'X'}.
-            \begin{lstlisting}[language=VHDL]
-signal F : std_ulogic_vector(7 downto 0);
-            \end{lstlisting}
             \item \texttt{integer}: rappresenta un numero intero, con valori compresi tra $-2^{31}$ e $2^{31}-1$ (è necessario definire l'intervallo di utilizzo).
             \begin{lstlisting}[language=VHDL]
 signal G : integer range 0 to 255; -- intervallo di utilizzo
             \end{lstlisting}
             \item \texttt{boolean}: rappresenta un valore booleano, con valori \texttt{true} e \texttt{false}.
-            \begin{lstlisting}[language=VHDL]
-signal H : boolean; -- true or false
-            \end{lstlisting}
         \end{itemize}
+
+        \begin{center}
+            \begin{adjustbox}{max width=\columnwidth}
+                \begin{tabular}{|l|l|p{6cm}|c|}
+                    \hline
+                    \multicolumn{1}{|c|}{\shortstack{\textbf{Logik}\\\textbf{-wert}}} & 
+                    \multicolumn{1}{c|}{\textbf{Bedeutung}} & 
+                    \multicolumn{1}{c|}{\textbf{Verwendung}} & 
+                    \multicolumn{1}{c|}{\shortstack{\textbf{Für Logik}\\\textbf{Synthese}}} \\
+                        \hline
+                        \verb|'U'| & Uninitialized   & Signal ist im Simulator noch nicht initialisiert. In der Hardware ist das Signal unbekannt. Typisch für nicht initialisierte Speicherstelle nach Start-up. & Nein \\
+                        \hline
+                        \verb|'X'| & Undefined       & Signal ist dem Simulator unbekannt. Typisch für Treiberkonflikte, d.h. ein Signal wird von mehr als einer Quelle getrieben. In der Welt der Hardware kommt dies vor allem bei Buskonflikten vor. & Nein \\
+                        \hline
+                        \verb|'0'| & Strong zero     & Low Pegel eines Standardausganges. Regelfall für Hardware „0“ Pegel. & Ja \\
+                        \hline
+                        \verb|'1'| & Strong one      & High Pegel eines Standardausganges. Regelfall für Hardware „1“ Pegel. & Ja \\
+                        \hline
+                        \verb|'Z'| & High Impedance  & Signalausgang von Leitung entkoppelt. Typisch für Hochimpedanz Ausgang eines Three-State Treibers bei bidirektionalen Bussen. & Ja \\
+                        \hline
+                        \verb|'L'| & Weak zero       & Low Pegel eines schwachen Treiberausgangs. Typisch für ein Signal, das mit einem pull-down Widerstand auf Low Potenzial gezogen wird. & Nein \\
+                        \hline
+                        \verb|'H'| & Weak one        & High Pegel eines schwachen Treiberausgangs. Typisch für ein Signal, das mit einem pull-up Widerstand auf High Potenzial gezogen wird. & Nein \\
+                        \hline
+                        \verb|'W'| & Weak unknown    & Simulator erkennt Treiberkonflikt. Dieser Fall ist analog zu \verb|'X'| mit dem Unterschied, dass der Treiberkonflikt hier durch schwache Treiber verursacht wird. & Nein \\
+                        \hline
+                        \verb|'-'| & Don’t Care      & Logikzustand des Ausgangssignals ist bedeutungslos. Existiert nur in der Schaltungssynthese und wird für Logikminimierung gebraucht. & Nein \\
+                        \hline
+                \end{tabular}
+            \end{adjustbox}
+        \end{center}
+
         
 % ============================================ PARALLEL SIGNAL =========================================
     \subsection{Nebenläufige Signalzuweisungen "y<=x"}
@@ -245,8 +264,10 @@ y <= v_1 & v_2;
 
 % ========================================= PROCESSI =========================================
     \subsection{Nebenläufige Prozesse}
+        Solo all'inerno dei processi é possibile utilizzare le variabili e le istruzioni sequenziali.\\
         I processi sono "Nebenläufige" di conseguenza iniziano ad essere eseguiti in concorrenza. Ma all'interno il codice viene eseguito normalmente (istruzioni sequenziali, sequenzialmente. istruzioni parallele in modo parallelo).\\
-        I processi sono sezioni di codice che vengono eseguite ogni volta che un \textcolor{red}{Segnale sensibile} nella lista sensibile (Sensitivitätliste) cambia di stato.         % Inizia un codice blocco, con colori VHDL (vedi definizione in DigDes.tex), escape inside is used to use external commandstf
+        I processi sono sezioni di codice che vengono eseguite ogni volta che un \textcolor{red}{Segnale sensibile} nella lista sensibile (Sensitivitätliste) cambia di stato.\\         % Inizia un codice blocco, con colori VHDL (vedi definizione in DigDes.tex), escape inside is used to use external commandstf
+        Nota: se un segnale usato in un processo non è nella lista di sensibilità, il suo valore corrisponde al valore durante la chiamata del processo/indefinito nel caso cambia in concomitanza.\\
         \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}, numberstyle=\tiny\color{gray}\highlightlines{3,4,5,6,7}{green}]
 process ((*@\textcolor{red}{clk, reset}@*))
     begin
@@ -260,7 +281,7 @@ process ((*@\textcolor{red}{clk, reset}@*))
     
     % ------------------------------ SEQUENZIELLE ANWEISUNGEN IM PROZESSE -----------------
         \subsubsection{sequenzielle Anweisungen im Prozesse}
-            Le istruzioni che vengono eseguite strettamente sequenzialmente all'interno di un processo sono:
+            Le istruzioni che vengono eseguite strettamente sequenziali all'interno di un processo sono:
             \begin{lstlisting}[language=VHDL]
 -- struttura if else:
 if condition_a then
@@ -303,3 +324,17 @@ end case;
         \begin{lstlisting}[language=VHDL]
 variable <var_name> {,var_name}: <type> [:= expression];
         \end{lstlisting}
+
+
+% ========================================= MODELLING TEMPORAL BEHAVIOUR =========================================
+        \subsection{Modellazione del Comportamento Temporale}
+            \begin{itemize}
+                \item \textbf{Event Queue}: I simulatori utilizzano una coda degli eventi per elaborare gli eventi in ordine cronologico.
+                \item \textbf{Modello Delta-Time}: Modello funzionale (nessun ritardo reale). Introduce un ritardo infinitesimale (cicli delta). Separa causa ed effetto nelle forme d\textquotesingle onda, anche se appaiono simultanei.
+                \item \textbf{Ritardo di Trasporto}: Modella il ritardo fisico reale.\\
+                Sintassi: \texttt{B <= transport A after tp;}\\
+                Tutti i cambiamenti di segnale (inclusi i glitch) vengono propagati.
+                \item \textbf{Ritardo Inerziale (default)}: Modella il filtraggio dei glitch nei circuiti reali.\\
+                Sintassi: \texttt{B <= A after tp;}\\
+                Gli impulsi brevi (inferiori al tempo di ritardo) vengono ignorati.
+            \end{itemize}
