@@ -11,8 +11,8 @@
         \begin{lstlisting}[language=VHDL]
 library ieee; 
 use ieee.std_logic_1164.all; -- CPP: using namespace std;
-use ieee.numeric_std.all; -- Solo per operazioni aritmetiche per vettori
-use ieee.math_real.all; -- Solo per operazioni aritmetiche per scalari
+use ieee.numeric_std.all; -- X operazioni aritmetiche x vettori
+use ieee.math_real.all; -- X operazioni aritmetiche x scalari
         \end{lstlisting}
 
 
@@ -210,6 +210,22 @@ signal G : integer range 0 to 255; -- intervallo di utilizzo
             \end{adjustbox}
         \end{center}
 
+
+% ============================================ GENERICS =========================================
+    \subsection{Generics}
+        \begin{itemize}
+            \item VHDL può passare parametri a un modello
+            \item Dichiarato nella descrizione dell'interfaccia.
+            \item generic dev\textquotesingle essere dichiarato in entity e in component 
+        \end{itemize}
+        \begin{lstlisting}
+    entity counter_generic ist
+        generic(CNT_MAX : natural := 127); -- generic dichiarato
+        port(
+            clk, rst, ena  : in std_ulogic;
+            count : out natural range 0 to CNT_MAX -1);
+    end counter_generic;
+        \end{lstlisting}
         
 % ============================================ PARALLEL SIGNAL =========================================
     \subsection{Nebenläufige Signalzuweisungen "y<=x"}

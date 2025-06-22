@@ -23,7 +23,8 @@ begin
             -- Asynchroner Reset
             q <= '0';
             -- wird zuerst abgearbeitet
-        elsif (clk(*@'@*)event and clk = '1') then (*@\setlength{\fboxsep}{1pt}\colorbox{yellow}{\strut\textbf{\textcolor[rgb]{0.0,0.4,0.2}{-- Sintassi per la detezione del fianco salita del clock}}}@*)
+        elsif (clk(*@'@*)event and clk = '1') then
+        (*@\setlength{\fboxsep}{1pt}\colorbox{yellow}{\strut\textbf{\textcolor[rgb]{0.0,0.4,0.2}{-- Sintassi per la detezione del fianco salita del clock}}}@*)
             q <= d; -- Synchroner Teil
         end if; -- Kein abschliessendes
         -- else: in allen anderen
@@ -45,8 +46,39 @@ end process;
         \end{lstlisting}
 
         
+% ==================== GENERIC COUNTER ========================
+    \subsection{Generic Counter}
+        \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
+            -- Dev'esserci la libreria ieee.math_real.all;
+entity counter_generic is
+    generic(CNT_MAX : natural := 127);
+    port(
+        clk, rst, ena  : in std_logic;
+        count : out std_ulogic_vector
+        (natural(ceil(log2(real(CNT_MAX + 1)))) - 1 downto 0));
+    end counter_generic;
+        \end{lstlisting}
+
+        
+% ==================== CLOCKDIVIDER ========================
+    \subsection{Clock Divider}
+        \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
+entity clockdivider is
+    generic(DIV_FACTOR : natural := 128);
+    port(
+        clk, rst, ena : in std_ulogic;
+        clk_out : out std_ulogic);
+end entity clockdivider;
+architecture behavioral of clockdivider is
+    -- pro Register ein present- und next-signal
+    signal cnt_present, cnt_next : natural range 0 to (DIV_FACTOR - 1);
+    signal tick_present, tick_next : std_ulogic;
+
+begin
+        \end{lstlisting}
+
 % ==================== TEST BENCH ========================
-    \subsection{Test bench (dt)}
+    \subsection{Test bench (tb)}
         \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
 -- Library declarations
 library ieee

@@ -84,6 +84,8 @@
 % ==================================== CODICE SCHELETRO FSM ====================================
     \subsection{Codice scheletro FSM (G,Z,F)}
         \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
+type state_type is (st_normal,st_hset,st_mset,st_ssync);
+signal <present_state>, <next_state>: <state_type>;
 
 G: process(present_state, inputs)
 begin
