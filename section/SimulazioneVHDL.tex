@@ -27,7 +27,8 @@
             \end{itemize}
         \end{itemize}
 
-\subsection{Infrastruttura di simulazione e Test (Test-Bench)}
+% ==================================== INFRASTRUTTURA DI SIMULAZIONE E TEST (TEST-BENCH) ====================================
+    \subsection{Infrastruttura di simulazione e Test (Test-Bench)}
 L'architettura posta sotto test si chiama DUT (Device Under Test) e viene istanziata all'interno del test-bench.
 Il Test-Bench stimola le entrate del DUT e verifica le uscite, idealmente dovrebbero essere stimolate tutte le possibilità delle entrate.
 In linea di principio il Test-Bench non deve essere sintetizzabile, in quanto il suo scopo è quello di verificare il corretto funzionamento del DUT.
@@ -38,12 +39,11 @@ Blocchi del Test-Bench:
     \item \textbf{Response Monitor:} Verifica le uscite del DUT confrontandole con i risultati attesi.
 \end{itemize}
 
-\subsubsection{Controllo automatico della risposta del DUT }
+% ==================================== CONTROLLO AUTOMATICO DELLA RISPOSTA DEL DUT ====================================
+    \subsubsection{Controllo automatico della risposta del DUT }
     Anweisung ASSERT:
 \begin{itemize}[leftmargin=1.5em]
     \item Utilizzata per verificare le condizioni attese.
     \item Sintassi: \verb|assert condition report "message";|
-    \item Se la condizione non è soddisfatta, viene generato un errore con il messaggio specificato.
-    \item Esempio: 
-    
+    \item Se la condizione non è soddisfatta, viene generato un errore con il messaggio specificato.    
 \end{itemize}
