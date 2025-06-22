@@ -142,3 +142,167 @@ architecture tb of exor_tb is
         end process;
 end tb;
             \end{lstlisting}
+
+% ==================== KOMPILIERBARER VHDL-Code ========================
+    \subsection{Compilable VHDL Code}
+        \begin{lstlisting}[language=VHDL]
+            library ieee; 
+use ieee.std_logic_1164.all;     
+ 
+ 
+entity strukturell_15 is      
+ port( 
+  clk      : in  std_ulogic;   
+  rst     : in  std_ulogic; 
+  clk_1Hz  : in std_ulogic; 
+  selector : in  Std_ulogic; 
+  result   : out std_ulogic_vector(7 downto 0) 
+ ); 
+end entity strukturell_15; 
+ 
+architecture RTL of strukturell_15 is    
+ component mux_13 
+  port( in_1 : in  std_ulogic_vector(7 downto 0); 
+   in_2 : in  std_ulogic_vector(7 downto 0); 
+   sel  : in  std_ulogic; 
+   oup  : out std_ulogic_vector(7 downto 0) 
+  ); 
+ end component mux_13; 
+ 
+ component counter_13 
+  port( clk      : in  std_ulogic; 
+   rst      : in  std_ulogic; 
+   count_out : out std_ulogic_vector(7 downto 0)); 
+ end component counter_13; 
+ 
+ signal value_1      : std_ulogic_vector(7 downto 0);  
+ signal value_2      : std_ulogic_vector(7 downto 0); 
+ 
+begin 
+ counter : counter_13     
+  port map( clk        => clk,   
+    rst       => rst,  
+      count_out  => value_1);     
+ 
+ trigger_15sec : counter_13 
+  port map( clk        => clk_1Hz,     
+         rst       => rst, 
+         count_out  => value_2); 
+ 
+ mux : mux_13 
+  port map( in_1   => value_1,     
+         in_2   => value_2, 
+         sel    => selector, 
+         oup    => result 
+  ); 
+end architecture RTL;
+        \end{lstlisting}
+
+% ==================== sequenzielle schaltung - zustandautomaten ========================
+    \subsection{sequenzielle schaltung - zustandautomaten}
+        \begin{lstlisting}[language=VHDL]
+library ieee; 
+use ieee.std_logic_1164.all;      
+ 
+entity lift is 
+ port(         
+  clk       : in  std_ulogic; 
+  nrst      : in  std_ulogic; 
+  LS_1_edge : in  std_ulogic; 
+  LS_1      : in  std_ulogic;     -- Lichtschranke_1 
+  LS_2      : in  std_ulogic;     -- Lichtschranke_2 
+  down      : out std_ulogic; 
+  up        : out std_ulogic 
+ ); 
+end lift; 
+ 
+architecture behavioral of lift is 
+ type state_type is (reset_state, state_up, state_down);  
+ 
+ signal present_state : state_type; 
+ signal next_state    : state_type;     
+ 
+begin 
+ Output_logic : process(present_state)    
+ begin         
+  up   <= '0';                 
+  down <= '0'; 
+  case present_state is 
+   when state_up => 
+    up <= '1'; 
+   when state_down => 
+    down <= '1'; 
+   when others => null;    
+  end case; 
+ end process; 
+ 
+ Next_state_logic : process(present_state, LS_1, LS_2, LS_1_edge) 
+ begin 
+  next_state <= reset_state;       
+  case present_state is 
+   when reset_state => 
+    if ((LS_1_edge = '1') and (LS_1 /= LS_2)) then 
+     next_state <= state_up; 
+    elsif ((LS_1_edge = '1') and (LS_1 = LS_2)) then 
+     next_state <= state_down;  
+    end if; 
+   when state_up => 
+    if ((LS_1_edge = '1') and (LS_1 = LS_2)) then 
+     next_state <= state_down; 
+    else 
+     next_state <= state_up; 
+    end if; 
+   when state_down => 
+    if ((LS_1_edge = '1') and (LS_1 /= LS_2)) then 
+     next_state <= state_up;   
+    else       
+     next_state <= state_down;   
+    end if;      
+     when others => null;            
+  end case;       
+ end process; 
+ 
+ registers : process(nrst, clk)    
+ begin        
+  if (nrst = '0') then    
+   present_state <= reset_state; 
+  elsif rising_edge(clk) then   
+   present_state <= next_state; 
+  end if; 
+ end process; 
+ 
+end behavioral; 
+ -- Kompakte Version 
+architecture compact of lift is 
+ subtype state_type is std_ulogic_vector(1 downto 0); 
+ signal present_state, next_state : state_type; 
+ 
+ constant reset_state : state_type := "00"; 
+ constant state_down  : state_type := "10"; 
+ constant state_up    : state_type := "01"; 
+ 
+begin 
+ Output_logic : (down, up) <= present_state; 
+ 
+ Next_state_logic : process(LS_1, LS_2) 
+ begin 
+  if (LS_1 = LS_2) then 
+   next_state <= state_down; 
+  else 
+   next_state <= state_up; 
+  end if; 
+ end process; 
+ 
+ registers : process(nrst, clk) 
+ begin 
+  if (nrst = '0') then 
+   present_state <= reset_state; 
+  elsif rising_edge(clk) then 
+   if (LS_1_edge = '1') then     
+    present_state <= next_state; 
+   end if; 
+  end if; 
+ end process; 
+ 
+end architecture compact;
+        \end{lstlisting}
