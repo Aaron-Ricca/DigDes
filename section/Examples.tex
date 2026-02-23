@@ -77,6 +77,8 @@ architecture behavioral of clockdivider is
 begin
         \end{lstlisting}
 
+
+\pagebreak
 % ==================== TEST BENCH ========================
     \subsection{Test bench (tb)}
         \begin{lstlisting}[language=VHDL, escapeinside={(*@}{@*)}]
@@ -93,6 +95,7 @@ end exor_tb;
 architecture tb of exor_tb is
     -- constant declarations
     constant sim_cyc : time := 10 ns;
+    -- constant sim_cyc : time := 1000 ms / 100_000_000;
     -- signal declarations
     signal tb_a, tb_b : std_ulogic;
     signal tb_y: std_ulogic;

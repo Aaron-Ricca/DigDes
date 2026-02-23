@@ -276,6 +276,8 @@ y <= (0 => '0', 1 => '1', 2 => b, others => a); -- Assegnazione esplicita (<posi
             \begin{lstlisting}[language=VHDL]
 y <= v_1 & v_2;
             \end{lstlisting}
+            \textbf{Dove?} L'operatore \texttt{\&} è utilizzabile sia nelle assegnazioni concorrenti (fuori dai processi) sia all'interno dei processi.\\
+            \textbf{Vale sempre?} No: si applica solo a segnali dello stesso tipo base (es.\ \texttt{std\_logic\_vector}, \texttt{bit\_vector}). La lunghezza totale del risultato deve corrispondere esattamente alla dimensione del segnale di destinazione.
 
 
 % ========================================= PROCESSI =========================================
